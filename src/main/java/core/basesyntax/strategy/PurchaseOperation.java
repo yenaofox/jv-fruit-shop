@@ -9,9 +9,11 @@ public class PurchaseOperation implements OperationHandler {
         String fruit = transaction.getFruit();
         int currentQuantity = Storage.fruitStorage.getOrDefault(fruit, 0);
         int newBalance = currentQuantity - transaction.getQuantity();
-        if (newBalance >= 0) {
-            Storage.fruitStorage.put(fruit, newBalance);
+        if (newBalance < 0) {
+            throw new RuntimeException("It is impossible to buy "
+                    + fruit + "s in quantity " + transaction.getQuantity()
+                    + " because on stock are " + currentQuantity + fruit + "s");
         }
-        throw new RuntimeException("It is impossible to buy more goods than are in stock");
+        Storage.fruitStorage.put(fruit, newBalance);
     }
 }
